@@ -5,7 +5,7 @@
 	"credit": "Made with Blockbench",
 	"texture_size": [64, 64],
 	"textures": {
-		"0": "playerplushies:block/player_bessyusa",
+		"0": "playerplushies:block/player_bluesrains",
 		"particle": "minecraft:block/light_gray_wool"
 	},
 	"elements": [

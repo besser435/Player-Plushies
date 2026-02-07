@@ -12,12 +12,16 @@ import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
+// TODO: fix rotation. allow for sign-like rotation.
+// TODO: center model in the middle of the block. currently its a bit far back. then fix the VoxelShapeBB
+
 public class PlayerPlushieBlock extends Block {
-    // This allows the block to "remember" which way it's facing
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
+
+
     protected static final VoxelShape SHAPE = Block.box(
-            4.0D, 0.0D, 4.0D,
-            12.0D, 16.0D, 12.0D);
+            4.0D, 0.0D, 6.0D,
+            12.0D, 16.0D, 14.0D);
 
     public PlayerPlushieBlock(Properties properties) {
         super(properties.noOcclusion());
