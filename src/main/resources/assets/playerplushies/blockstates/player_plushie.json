@@ -1,8 +1,13 @@
 {
   "variants": {
-    "facing=north": { "model": "playerplushies:block/player_plushie" },
-    "facing=south": { "model": "playerplushies:block/player_plushie", "y": 180 },
-    "facing=east": { "model": "playerplushies:block/player_plushie", "y": 90 },
-    "facing=west": { "model": "playerplushies:block/player_plushie", "y": 270 }
+    "facing=north,on_bed=false": { "model": "playerplushies:block/player_plushie" },
+    "facing=south,on_bed=false": { "model": "playerplushies:block/player_plushie", "y": 180 },
+    "facing=east,on_bed=false":  { "model": "playerplushies:block/player_plushie", "y": 90 },
+    "facing=west,on_bed=false":  { "model": "playerplushies:block/player_plushie", "y": 270 },
+
+    "facing=north,on_bed=true":  { "model": "playerplushies:block/player_plushie_on_bed" },
+    "facing=south,on_bed=true":  { "model": "playerplushies:block/player_plushie_on_bed", "y": 180 },
+    "facing=east,on_bed=true":   { "model": "playerplushies:block/player_plushie_on_bed", "y": 90 },
+    "facing=west,on_bed=true":   { "model": "playerplushies:block/player_plushie_on_bed", "y": 270 }
   }
 }
