@@ -16,10 +16,9 @@ public class PPBlocks {
 
     public static final DeferredBlock<Block> PLAYER_PLUSHIE = BLOCKS.register("player_plushie",
             () -> new PlayerPlushieBlock(BlockBehaviour.Properties.of()
-                    .strength(0.5f, 0.5f)
+                    .strength(0.1f, 0.1f)
                     .sound(SoundType.WOOL)
-                    .requiresCorrectToolForDrops()
-            ));
+                    .requiresCorrectToolForDrops()));
 
     // TODO: Use datagen or post build script to add the following:
     // `"render_type": "minecraft:cutout",`     to fix outer skin layers
