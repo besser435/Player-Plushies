@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "facing=north": { "model": "playerplushies:block/player_plushie" },
+    "facing=south": { "model": "playerplushies:block/player_plushie", "y": 180 },
+    "facing=east": { "model": "playerplushies:block/player_plushie", "y": 90 },
+    "facing=west": { "model": "playerplushies:block/player_plushie", "y": 270 }
+  }
+}

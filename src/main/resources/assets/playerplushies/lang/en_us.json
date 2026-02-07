@@ -1,0 +1,8 @@
+{
+  "itemGroup.playerplushies": "Player Plushies",
+  "block.playerplushies.player_plushie": "Player Plushie",
+
+  "playerplushies.configuration.title": "Player Plushies Configs",
+  "playerplushies.configuration.section.playerplushies.common.toml": "Player Plushies Configs",
+  "playerplushies.configuration.section.playerplushies.common.toml.title": "Player Plushies Configs"
+}
