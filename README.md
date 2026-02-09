@@ -20,10 +20,14 @@
   * Craft with a sewing kit tool. A sewing kit has very limited durability (12 maybe?). Would be some string and an iron nugget.
 
 
-* Features
+* Features 
+  * Rename in anvil to apply skin.
+  * Skin should update like player heads. Use a slimeball to prevent skin from updating.
+  * Use a name tag to display the player whose skin is being used above the plushie like a player's username.
   * Default skin/texture
   * 🏳️‍⚧️ fluffy shark plushie (blahaj)
   * Sound on right click
+
   
 
 * Stretch features

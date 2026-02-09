@@ -1,5 +1,6 @@
 package me.besser.playerplushies.blocks.playerPlushie;
 
+import me.besser.playerplushies.util.ShapesUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.tags.BlockTags;
@@ -7,49 +8,78 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.HorizontalDirectionalBlock;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.level.block.state.properties.RotationSegment;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 
-// TODO: fix rotation. allow for sign-like rotation.
-// TODO: center model in the middle of the block. currently its a bit far back. then fix the VoxelShapeBB
-
-public class PlayerPlushieBlock extends Block implements SimpleWaterloggedBlock {
-    public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
+public class PlayerPlushieBlock extends Block implements SimpleWaterloggedBlock, EntityBlock {
+    public static final IntegerProperty ROTATION = BlockStateProperties.ROTATION_16;
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public static final BooleanProperty ON_BED = BooleanProperty.create("on_bed");
 
-    // FIXME: Hitbox does not change according to model rotation.
+    // TODO: Come up with better hitbox solution. Looks weird when the plushie is rotated. Maybe just center the
+    // plushie on the block
     protected static final VoxelShape SHAPE_NORMAL = Block.box(
             4.0D, 0.0D, 4.0D,
             12.0D, 16.0D, 12.0D
     );
 
     protected static final VoxelShape SHAPE_ON_BED = Block.box(
-            4.0D, 0.0D, 4.0D,
-            12.0D, 9.0D, 12.0D
+            4.0D, 0.0D, 7.0D,
+            12.0D, 9.0D, 15.0D
     );
+
+    private static final VoxelShape[] SHAPES_NORMAL = new VoxelShape[4];
+    private static final VoxelShape[] SHAPES_ON_BED = new VoxelShape[4];
+
+    static {
+        VoxelShape[] bases = { SHAPE_NORMAL, SHAPE_ON_BED };
+        VoxelShape[][] targets = { SHAPES_NORMAL, SHAPES_ON_BED };
+
+        for (int b = 0; b < bases.length; b++) {
+            for (int i = 0; i < 4; i++) {
+                targets[b][i] = (i == 0) ? bases[b] : ShapesUtils.rotateY90(bases[b], i);
+            }
+        }
+    }
 
     public PlayerPlushieBlock(Properties properties) {
         super(properties.noOcclusion());
         this.registerDefaultState(this.stateDefinition.any()
-                .setValue(FACING, Direction.NORTH)
+                .setValue(ROTATION, 0)
                 .setValue(WATERLOGGED, false)
                 .setValue(ON_BED, false));
     }
 
     @Override
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new PlayerPlushieBlockEntity(pos, state);
+    }
+
+    @Override
     public @NotNull VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-        return state.getValue(ON_BED) ? SHAPE_ON_BED : SHAPE_NORMAL;
+        int rotation = state.getValue(ROTATION);
+        int dir = (rotation + 2) / 4 & 3;
+        return state.getValue(ON_BED)
+                ? SHAPES_ON_BED[dir]
+                : SHAPES_NORMAL[dir];
+    }
+
+    @Override
+    public @NotNull RenderShape getRenderShape(BlockState state) {
+        return RenderShape.INVISIBLE;   // Do not render the block as the BER will handle it
     }
 
 
@@ -58,16 +88,20 @@ public class PlayerPlushieBlock extends Block implements SimpleWaterloggedBlock 
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         BlockPos pos = context.getClickedPos();
         FluidState fluidstate = context.getLevel().getFluidState(context.getClickedPos());
+        int rotation = RotationSegment.convertToSegment(context.getRotation());
         boolean isBed = context.getLevel().getBlockState(pos.below()).is(BlockTags.BEDS);
 
         return this.defaultBlockState()
-                .setValue(FACING, context.getHorizontalDirection().getOpposite())
+                .setValue(ROTATION, rotation)
                 .setValue(WATERLOGGED, fluidstate.getType() == Fluids.WATER)
                 .setValue(ON_BED, isBed);
     }
 
     @Override
-    public @NotNull BlockState updateShape(BlockState state, Direction facing, BlockState facingState, LevelAccessor level, BlockPos currentPos, BlockPos facingPos) {
+    public @NotNull BlockState updateShape(
+            BlockState state, Direction facing, BlockState facingState,
+            LevelAccessor level, BlockPos currentPos, BlockPos facingPos
+    ) {
         if (state.getValue(WATERLOGGED)) {
             level.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
         }
@@ -87,6 +121,6 @@ public class PlayerPlushieBlock extends Block implements SimpleWaterloggedBlock 
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(FACING, WATERLOGGED, ON_BED);
+        builder.add(ROTATION, WATERLOGGED, ON_BED);
     }
 }

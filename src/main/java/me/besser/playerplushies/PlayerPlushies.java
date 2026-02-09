@@ -1,6 +1,7 @@
 package me.besser.playerplushies;
 
 import com.mojang.logging.LogUtils;
+import me.besser.playerplushies.blocks.PPBlockEntities;
 import me.besser.playerplushies.blocks.PPBlocks;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -32,6 +33,7 @@ public class PlayerPlushies {
 
     public PlayerPlushies(IEventBus modEventBus, ModContainer modContainer) {
         PPBlocks.BLOCKS.register(modEventBus);
+        PPBlockEntities.BLOCK_ENTITIES.register(modEventBus);
         PPBlocks.ITEMS.register(modEventBus);
         CREATIVE_MODE_TABS.register(modEventBus);
     }
@@ -39,9 +41,4 @@ public class PlayerPlushies {
     private void commonSetup(FMLCommonSetupEvent event) {
         LOGGER.info("Player Plushies started!");
     }
-
-//    @SubscribeEvent
-//    public void onServerStarting(ServerStartingEvent event) {
-//
-//    }
 }
