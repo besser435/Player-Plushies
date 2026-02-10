@@ -1,6 +1,5 @@
 package me.besser.playerplushies.blocks.playerPlushie;
 
-import me.besser.playerplushies.util.ShapesUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.tags.BlockTags;
@@ -29,31 +28,15 @@ public class PlayerPlushieBlock extends Block implements SimpleWaterloggedBlock,
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public static final BooleanProperty ON_BED = BooleanProperty.create("on_bed");
 
-    // TODO: Come up with better hitbox solution. Looks weird when the plushie is rotated. Maybe just center the
-    // plushie on the block
     protected static final VoxelShape SHAPE_NORMAL = Block.box(
             4.0D, 0.0D, 4.0D,
             12.0D, 16.0D, 12.0D
     );
 
     protected static final VoxelShape SHAPE_ON_BED = Block.box(
-            4.0D, 0.0D, 7.0D,
-            12.0D, 9.0D, 15.0D
+            4.0D, 0.0D, 4.0D,
+            12.0D, 9.0D, 12.0D
     );
-
-    private static final VoxelShape[] SHAPES_NORMAL = new VoxelShape[4];
-    private static final VoxelShape[] SHAPES_ON_BED = new VoxelShape[4];
-
-    static {
-        VoxelShape[] bases = { SHAPE_NORMAL, SHAPE_ON_BED };
-        VoxelShape[][] targets = { SHAPES_NORMAL, SHAPES_ON_BED };
-
-        for (int b = 0; b < bases.length; b++) {
-            for (int i = 0; i < 4; i++) {
-                targets[b][i] = (i == 0) ? bases[b] : ShapesUtils.rotateY90(bases[b], i);
-            }
-        }
-    }
 
     public PlayerPlushieBlock(Properties properties) {
         super(properties.noOcclusion());
@@ -70,11 +53,7 @@ public class PlayerPlushieBlock extends Block implements SimpleWaterloggedBlock,
 
     @Override
     public @NotNull VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-        int rotation = state.getValue(ROTATION);
-        int dir = (rotation + 2) / 4 & 3;
-        return state.getValue(ON_BED)
-                ? SHAPES_ON_BED[dir]
-                : SHAPES_NORMAL[dir];
+        return state.getValue(ON_BED) ? SHAPE_ON_BED : SHAPE_NORMAL;
     }
 
     @Override
