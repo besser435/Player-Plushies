@@ -2,37 +2,52 @@ package me.besser.playerplushies.blocks.playerPlushie;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.block.BlockRenderDispatcher;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
+import net.minecraft.client.renderer.rendertype.RenderType;
+import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.RotationSegment;
-import net.neoforged.neoforge.client.model.data.ModelData;
+import net.minecraft.world.phys.Vec3;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
 
-public class PlayerPlushieRenderer implements BlockEntityRenderer<PlayerPlushieBlockEntity> {
-    private final BlockRenderDispatcher blockRenderer;
+public class PlayerPlushieRenderer implements BlockEntityRenderer<PlayerPlushieBlockEntity, PlayerPlushieBERState> {
 
     public PlayerPlushieRenderer(BlockEntityRendererProvider.Context context) {
-        this.blockRenderer = context.getBlockRenderDispatcher();
+
+    }
+
+
+    @Override
+    public PlayerPlushieBERState createRenderState() {
+        return new PlayerPlushieBERState();
     }
 
     @Override
-    public void render(
-            PlayerPlushieBlockEntity be,
-            float partialTick,
-            PoseStack poseStack,
-            MultiBufferSource buffer,
-            int combinedLight,
-            int combinedOverlay
-    ) {
+    public void extractRenderState(PlayerPlushieBlockEntity blockEntity, PlayerPlushieBERState renderState,
+                                   float partialTick, Vec3 cameraPosition,
+                                   ModelFeatureRenderer.@Nullable CrumblingOverlay breakProgress) {
+        BlockEntityRenderer.super.extractRenderState(blockEntity, renderState, partialTick, cameraPosition, breakProgress);
+
+
+        renderState.lightPosition = blockEntity.getBlockPos();
+        renderState.blockEntityLevel = blockEntity.getLevel();
+
+        renderState.rotation = blockEntity.getRenderingRotation();
+
+
+    }
+
+    @Override
+    public void submit(PlayerPlushieBERState renderState, PoseStack poseStack, SubmitNodeCollector submitNodeCollector,
+                       CameraRenderState cameraRenderState) {
         BlockState state = be.getBlockState();
         Level level = Objects.requireNonNull(be.getLevel());
         BlockPos pos = be.getBlockPos();
@@ -41,7 +56,7 @@ public class PlayerPlushieRenderer implements BlockEntityRenderer<PlayerPlushieB
 
         // Rotation
         poseStack.translate(0.5, 0.0, 0.5); // Sets the rotation axis to the middle of the block
-        float angle = RotationSegment.convertToDegrees(state.getValue(PlayerPlushieBlock.ROTATION));
+        float angle = RotationSegment.convertToDegrees(renderState.rotation);
         poseStack.mulPose(Axis.YP.rotationDegrees(-angle));
 
         // Bed offset
