@@ -50,8 +50,7 @@ public class PlayerPlushieRenderer implements BlockEntityRenderer<PlayerPlushieB
         poseStack.pushPose();
 
         // Rotation
-        poseStack.translate(0.5, 0.0, 0.5);
-
+        poseStack.translate(0.5, 0.0, 0.5);  // Sets the rotation axis to the middle of the block
         float angle = RotationSegment.convertToDegrees(
                 state.getValue(PlayerPlushieBlock.ROTATION)
         );
@@ -59,7 +58,7 @@ public class PlayerPlushieRenderer implements BlockEntityRenderer<PlayerPlushieB
 
         // Bed offset
         if (state.getValue(PlayerPlushieBlock.ON_BED)) {
-            poseStack.translate(0.0, -7.0 / 16.0, 0.0);
+            poseStack.translate(0.0, -7.0 / 16.0, 0.0);  // Bed is 9 pixels lower
         }
 
         // Scale + flip to match entity-style rendering
