@@ -20,22 +20,24 @@ public class PlayerPlushies {
     public static final String MODID = "playerplushies";
     public static final Logger LOGGER = LogUtils.getLogger();
 
-    public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
+    public static final DeferredRegister<CreativeModeTab> TABS =
+            DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
 
-    public static final DeferredHolder<CreativeModeTab, CreativeModeTab> PLUSHIE_TAB = CREATIVE_MODE_TABS.register("plushie_tab", () -> CreativeModeTab.builder()
-            .title(Component.translatable("itemGroup.playerplushies"))
-            .withTabsBefore(CreativeModeTabs.COMBAT)
-            .icon(() -> PPBlocks.PLAYER_PLUSHIE_ITEM.get().getDefaultInstance())
-            .displayItems((parameters, output) -> {
-                output.accept(PPBlocks.PLAYER_PLUSHIE_ITEM.get());
-            }).build());
+    public static final DeferredHolder<CreativeModeTab, CreativeModeTab> PLUSHIE_TAB =
+            TABS.register("plushie_tab", () -> CreativeModeTab.builder()
+                    .title(Component.translatable("itemGroup.playerplushies"))
+                    .withTabsBefore(CreativeModeTabs.COMBAT)
+                    .icon(() -> PPBlocks.PLAYER_PLUSHIE_ITEM.get().getDefaultInstance())
+                    .displayItems((parameters, output) -> {
+                        output.accept(PPBlocks.PLAYER_PLUSHIE_ITEM.get());
+                    }).build());
 
 
     public PlayerPlushies(IEventBus modEventBus, ModContainer modContainer) {
         PPBlocks.BLOCKS.register(modEventBus);
         PPBlockEntities.BLOCK_ENTITIES.register(modEventBus);
         PPBlocks.ITEMS.register(modEventBus);
-        CREATIVE_MODE_TABS.register(modEventBus);
+        TABS.register(modEventBus);
     }
 
     private void commonSetup(FMLCommonSetupEvent event) {

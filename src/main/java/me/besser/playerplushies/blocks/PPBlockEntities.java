@@ -13,5 +13,5 @@ public class PPBlockEntities {
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<PlayerPlushieBlockEntity>> PLAYER_PLUSHIE_BE =
             BLOCK_ENTITIES.register("player_plushie_be",
-                    () -> BlockEntityType.Builder.of(PlayerPlushieBlockEntity::new, PPBlocks.PLAYER_PLUSHIE.get()).build(null));
+                    () -> new BlockEntityType<>(PlayerPlushieBlockEntity::new, PPBlocks.PLAYER_PLUSHIE.get()));
 }
