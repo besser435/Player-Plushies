@@ -1,6 +1,7 @@
 package me.besser.playerplushies;
 
 import me.besser.playerplushies.blocks.PPBlockEntities;
+import me.besser.playerplushies.blocks.playerPlushie.PlayerPlushieModel;
 import me.besser.playerplushies.blocks.playerPlushie.PlayerPlushieRenderer;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -24,6 +25,17 @@ public class PlayerPlushiesClient {
 
     @SubscribeEvent
     public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
-        event.registerBlockEntityRenderer(PPBlockEntities.PLAYER_PLUSHIE_BE.get(), PlayerPlushieRenderer::new);
+        event.registerBlockEntityRenderer(
+                PPBlockEntities.PLAYER_PLUSHIE_BE.get(),
+                PlayerPlushieRenderer::new
+        );
+    }
+
+    @SubscribeEvent
+    public static void registerLayers(EntityRenderersEvent.RegisterLayerDefinitions event) {
+        event.registerLayerDefinition(
+                PlayerPlushieRenderer.LAYER,
+                PlayerPlushieModel::createBodyLayer
+        );
     }
 }
