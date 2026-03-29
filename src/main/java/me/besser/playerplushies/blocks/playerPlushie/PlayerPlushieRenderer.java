@@ -12,7 +12,6 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.resources.DefaultPlayerSkin;
-import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.RotationSegment;
@@ -45,12 +44,12 @@ public class PlayerPlushieRenderer implements BlockEntityRenderer<PlayerPlushieB
             Vec3 cameraPos
     ) {
         BlockState state = be.getBlockState();
-        BlockPos pos = be.getBlockPos();
-
         poseStack.pushPose();
 
         // Rotation
-        poseStack.translate(0.5, 0.0, 0.5);  // Sets the rotation axis to the middle of the block
+        // Sets the rotation axis to the middle of the block.
+        // Also moves the model up a block since the origin is a block too low. Probably a Blockbench export bug. Easier to fix here.
+        poseStack.translate(0.5, 1.5, 0.5);
         float angle = RotationSegment.convertToDegrees(
                 state.getValue(PlayerPlushieBlock.ROTATION)
         );
